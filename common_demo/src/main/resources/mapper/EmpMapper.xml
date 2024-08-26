@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.southwind.mapper.EmpMapper">
+
+    <!--手动指定字段与实体属性的映射关系
+    resultType:如column和property完全映射，自动配置（用于单表查询）
+    resultMap：手动配置映射(用于多表连接)
+-->
+    <select id="findById" resultType="com.southwind.entity.Emp">
+     select id,name from emp where id=#{id}
+    </select>
+
+    <select id="findByName" resultType="com.southwind.entity.Emp">
+        select id,name from emp where name=#{name}
+    </select>
+
+
+
+
+    <resultMap id="empMap" type="com.southwind.entity.Emp">
+        <!--手动指定字段与实体属性的映射关系
+            column: 数据表的字段名称
+            property：实体的属性名称
+        -->
+        <id column="id" property="id"></id>
+        <result column="name" property="name"></result>
+        <result column="age" property="age"></result>
+
+        <!--
+            property: 当前实体(order)中的属性名称(private User user)
+            javaType: 当前实体(order)中的属性的类型(User)
+        -->
+        <association property="dept" javaType="com.southwind.entity.Dept">
+            <id column="did" property="id"></id>
+            <result column="dname" property="name"></result>
+        </association>
+    </resultMap>
+    <select id="findEmpAll" resultMap="empMap">
+        select * from emp e, dept d where e.deptid=d.did
+    </select>
+</mapper>

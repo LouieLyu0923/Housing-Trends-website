@@ -1,0 +1,266 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.southwind.mapper.HouseInformationMapper">
+
+    <!--手动指定字段与实体属性的映射关系
+    resultType:如column和property完全映射，自动配置（用于单表查询）
+    resultMap：手动配置映射(用于多表连接)
+-->
+
+<!--    <resultMap id="info" type="com.southwind.vo.HouseInformationVO">-->
+        <!--手动指定字段与实体属性的映射关系
+            column: 数据表的字段名称
+            property：实体的属性名称
+        -->
+<!--        <id column="id" property="id"></id>-->
+<!--        <result column="house_name" property="houseName"></result>-->
+<!--        <result column="house_area" property="houseArea"></result>-->
+<!--        <result column="price" property="price"></result>-->
+<!--        <result column="house_aspect" property="houseAspect"></result>-->
+<!--        <result column="floor" property="floor"></result>-->
+<!--        <result column="urban_area" property="urbanArea"></result>     下面resultMap="info"也可以-->
+        <!--
+            property: 当前实体(order)中的属性名称(private User user)
+            javaType: 当前实体(order)中的属性的类型(User)
+        -->
+        <!-- 一对一级联查询 -->
+<!--        <association property="address" javaType="com.southwind.entity.Address">-->
+<!--            <id column="add_id" property="addId"></id>-->
+<!--            <result column="urban_area" property="urbanArea"></result>-->
+<!--            <result column="street" property="street"></result>-->
+<!--            -->
+<!--        </association>-->
+
+<!--        <association property="houseType" javaType="com.southwind.entity.HouseType">-->
+<!--            <id column="type_id" property="typeId"></id>-->
+<!--            <result column="type" property="type"></result>-->
+<!--        </association>-->
+
+<!--    </resultMap>-->
+
+    <select id="selectPage" parameterType="String" resultType="com.southwind.vo.HouseInformationVO">
+        select *
+        from house_information hi, address a, house_type ht, house_date hd, house_advantage ha,advantage ad
+        where hi.add_house_id=a.add_id and hi.type_house_id=ht.type_id and hi.date_house_id=hd.date_id and hi.id=ha.ad_id and ha.advan_id=ad.advantage_id
+        <if test="key1 != null">
+            and (hi.id = #{key1})
+        </if>
+        <if test="key2 != null">
+            and (hi.id LIKE CONCAT('%', #{key2}, '%') or
+            hi.house_name LIKE CONCAT('%', #{key2}, '%') or
+            hi.house_aspect LIKE CONCAT('%', #{key2}, '%') or
+            hi.floor LIKE CONCAT('%', #{key2}, '%') or
+            ht.type LIKE CONCAT('%', #{key2}, '%') or
+            a.urban_area LIKE CONCAT('%', #{key2}, '%') or
+            a.street LIKE CONCAT('%', #{key2}, '%') or
+            hd.date LIKE CONCAT('%', #{key2}, '%') or
+            ad.advantage LIKE CONCAT('%', #{key2}, '%'))
+        </if>
+        <if test="key3 != null">
+            and (hi.id LIKE CONCAT('%', #{key3}, '%') or
+            hi.house_name LIKE CONCAT('%', #{key3}, '%') or
+            hi.house_aspect LIKE CONCAT('%', #{key3}, '%') or
+            hi.floor LIKE CONCAT('%', #{key3}, '%') or
+            ht.type LIKE CONCAT('%', #{key3}, '%') or
+            a.urban_area LIKE CONCAT('%', #{key3}, '%') or
+            a.street LIKE CONCAT('%', #{key3}, '%') or
+            hd.date LIKE CONCAT('%', #{key3}, '%') or
+            ad.advantage LIKE CONCAT('%', #{key3}, '%'))
+        </if>
+        <if test="key4 != null">
+            and (hi.id LIKE CONCAT('%', #{key4}, '%') or
+            hi.house_name LIKE CONCAT('%', #{key4}, '%') or
+            hi.house_aspect LIKE CONCAT('%', #{key4}, '%') or
+            hi.floor LIKE CONCAT('%', #{key4}, '%') or
+            ht.type LIKE CONCAT('%', #{key4}, '%') or
+            a.urban_area LIKE CONCAT('%', #{key4}, '%') or
+            a.street LIKE CONCAT('%', #{key4}, '%') or
+            hd.date LIKE CONCAT('%', #{key4}, '%') or
+            ad.advantage LIKE CONCAT('%', #{key4}, '%'))
+        </if>
+        <if test="key5 != null">
+            and (hi.id LIKE CONCAT('%', #{key5}, '%') or
+            hi.house_name LIKE CONCAT('%', #{key5}, '%') or
+            hi.house_aspect LIKE CONCAT('%', #{key5}, '%') or
+            hi.floor LIKE CONCAT('%', #{key5}, '%') or
+            ht.type LIKE CONCAT('%', #{key5}, '%') or
+            a.urban_area LIKE CONCAT('%', #{key5}, '%') or
+            a.street LIKE CONCAT('%', #{key5}, '%') or
+            hd.date LIKE CONCAT('%', #{key5}, '%') or
+            ad.advantage LIKE CONCAT('%', #{key5}, '%'))
+        </if>
+        <if test="key6 != null">
+            and (hi.id LIKE CONCAT('%', #{key6}, '%') or
+            hi.house_name LIKE CONCAT('%', #{key6}, '%') or
+            hi.house_aspect LIKE CONCAT('%', #{key6}, '%') or
+            hi.floor LIKE CONCAT('%', #{key6}, '%') or
+            ht.type LIKE CONCAT('%', #{key6}, '%') or
+            a.urban_area LIKE CONCAT('%', #{key6}, '%') or
+            a.street LIKE CONCAT('%', #{key6}, '%') or
+            hd.date LIKE CONCAT('%', #{key6}, '%') or
+            ad.advantage LIKE CONCAT('%', #{key6}, '%'))
+        </if>
+        <if test="key7 != null">
+            <choose>
+                <when test="key7.matches('^&gt;[0-9]+$')">
+                    <bind name="number1" value="key7.substring(1)" />
+                    and (hi.house_area &gt;= #{number1})
+                </when>
+                <when test="key7.matches('^&lt;[0-9]+$')">
+                    <bind name="number1" value="key7.substring(1)" />
+                    and (hi.house_area &lt; #{number1})
+                </when>
+            </choose>
+        </if>
+        <if test="key8 != null">
+            <choose>
+                <when test="key8.matches('^&gt;[0-9]+$')">
+                    <bind name="number2" value="key8.substring(1)" />
+                    and (hi.house_area &gt;= #{number2})
+                </when>
+                <when test="key8.matches('^&lt;[0-9]+$')">
+                    <bind name="number2" value="key8.substring(1)" />
+                    and (hi.house_area &lt; #{number2})
+                </when>
+            </choose>
+        </if>
+        <if test="key9 != null">
+            <choose>
+                <when test="key9.matches('^&gt;[0-9]+$')">
+                    <bind name="number3" value="key9.substring(1)" />
+                    and (hi.price &gt;= #{number3})
+                </when>
+                <when test="key9.matches('^&lt;[0-9]+$')">
+                    <bind name="number3" value="key9.substring(1)" />
+                    and (hi.price &lt; #{number3})
+                </when>
+            </choose>
+        </if>
+        <if test="key10 != null">
+            <choose>
+                <when test="key10.matches('^&gt;[0-9]+$')">
+                    <bind name="number4" value="key10.substring(1)" />
+                    and (hi.price &gt;= #{number4})
+                </when>
+                <when test="key10.matches('^&lt;[0-9]+$')">
+                    <bind name="number4" value="key10.substring(1)" />
+                    and (hi.price &lt; #{number4})
+                </when>
+            </choose>
+        </if>
+    </select>
+
+    <select id="selectAllHouse" parameterType="String" resultType="com.southwind.vo.HouseInformationVO">
+        select *
+        from house_information hi, address a, house_type ht, house_date hd, house_advantage ha,advantage ad
+        where hi.add_house_id=a.add_id and hi.type_house_id=ht.type_id and hi.date_house_id=hd.date_id and hi.id=ha.ad_id and ha.advan_id=ad.advantage_id
+        <if test="key1 != null">
+            and (hi.id = #{key1})
+        </if>
+        <if test="key2 != null">
+            and (hi.id LIKE CONCAT('%', #{key2}, '%') or
+            hi.house_name LIKE CONCAT('%', #{key2}, '%') or
+            hi.house_aspect LIKE CONCAT('%', #{key2}, '%') or
+            hi.floor LIKE CONCAT('%', #{key2}, '%') or
+            ht.type LIKE CONCAT('%', #{key2}, '%') or
+            a.urban_area LIKE CONCAT('%', #{key2}, '%') or
+            a.street LIKE CONCAT('%', #{key2}, '%') or
+            hd.date LIKE CONCAT('%', #{key2}, '%') or
+            ad.advantage LIKE CONCAT('%', #{key2}, '%'))
+        </if>
+        <if test="key3 != null">
+            and (hi.id LIKE CONCAT('%', #{key3}, '%') or
+            hi.house_name LIKE CONCAT('%', #{key3}, '%') or
+            hi.house_aspect LIKE CONCAT('%', #{key3}, '%') or
+            hi.floor LIKE CONCAT('%', #{key3}, '%') or
+            ht.type LIKE CONCAT('%', #{key3}, '%') or
+            a.urban_area LIKE CONCAT('%', #{key3}, '%') or
+            a.street LIKE CONCAT('%', #{key3}, '%') or
+            hd.date LIKE CONCAT('%', #{key3}, '%') or
+            ad.advantage LIKE CONCAT('%', #{key3}, '%'))
+        </if>
+        <if test="key4 != null">
+            and (hi.id LIKE CONCAT('%', #{key4}, '%') or
+            hi.house_name LIKE CONCAT('%', #{key4}, '%') or
+            hi.house_aspect LIKE CONCAT('%', #{key4}, '%') or
+            hi.floor LIKE CONCAT('%', #{key4}, '%') or
+            ht.type LIKE CONCAT('%', #{key4}, '%') or
+            a.urban_area LIKE CONCAT('%', #{key4}, '%') or
+            a.street LIKE CONCAT('%', #{key4}, '%') or
+            hd.date LIKE CONCAT('%', #{key4}, '%') or
+            ad.advantage LIKE CONCAT('%', #{key4}, '%'))
+        </if>
+        <if test="key5 != null">
+            and (hi.id LIKE CONCAT('%', #{key5}, '%') or
+            hi.house_name LIKE CONCAT('%', #{key5}, '%') or
+            hi.house_aspect LIKE CONCAT('%', #{key5}, '%') or
+            hi.floor LIKE CONCAT('%', #{key5}, '%') or
+            ht.type LIKE CONCAT('%', #{key5}, '%') or
+            a.urban_area LIKE CONCAT('%', #{key5}, '%') or
+            a.street LIKE CONCAT('%', #{key5}, '%') or
+            hd.date LIKE CONCAT('%', #{key5}, '%') or
+            ad.advantage LIKE CONCAT('%', #{key5}, '%'))
+        </if>
+        <if test="key6 != null">
+            and (hi.id LIKE CONCAT('%', #{key6}, '%') or
+            hi.house_name LIKE CONCAT('%', #{key6}, '%') or
+            hi.house_aspect LIKE CONCAT('%', #{key6}, '%') or
+            hi.floor LIKE CONCAT('%', #{key6}, '%') or
+            ht.type LIKE CONCAT('%', #{key6}, '%') or
+            a.urban_area LIKE CONCAT('%', #{key6}, '%') or
+            a.street LIKE CONCAT('%', #{key6}, '%') or
+            hd.date LIKE CONCAT('%', #{key6}, '%') or
+            ad.advantage LIKE CONCAT('%', #{key6}, '%'))
+        </if>
+
+        <if test="key7 != null">
+            <choose>
+                <when test="key7.matches('^&gt;[0-9]+$')">
+                    <bind name="number1" value="key7.substring(1)" />
+                    and (hi.house_area &gt;= #{number1})
+                </when>
+                <when test="key7.matches('^&lt;[0-9]+$')">
+                    <bind name="number1" value="key7.substring(1)" />
+                    and (hi.house_area &lt; #{number1})
+                </when>
+            </choose>
+        </if>
+        <if test="key8 != null">
+            <choose>
+                <when test="key8.matches('^&gt;[0-9]+$')">
+                    <bind name="number2" value="key8.substring(1)" />
+                    and (hi.house_area &gt;= #{number2})
+                </when>
+                <when test="key8.matches('^&lt;[0-9]+$')">
+                    <bind name="number2" value="key8.substring(1)" />
+                    and (hi.house_area &lt; #{number2})
+                </when>
+            </choose>
+        </if>
+        <if test="key9 != null">
+            <choose>
+                <when test="key9.matches('^&gt;[0-9]+$')">
+                    <bind name="number3" value="key9.substring(1)" />
+                    and (hi.price &gt;= #{number3})
+                </when>
+                <when test="key9.matches('^&lt;[0-9]+$')">
+                    <bind name="number3" value="key9.substring(1)" />
+                    and (hi.price &lt; #{number3})
+                </when>
+            </choose>
+        </if>
+        <if test="key10 != null">
+            <choose>
+                <when test="key10.matches('^&gt;[0-9]+$')">
+                    <bind name="number4" value="key10.substring(1)" />
+                    and (hi.price &gt;= #{number4})
+                </when>
+                <when test="key10.matches('^&lt;[0-9]+$')">
+                    <bind name="number4" value="key10.substring(1)" />
+                    and (hi.price &lt; #{number4})
+                </when>
+            </choose>
+        </if>
+    </select>
+
+</mapper>

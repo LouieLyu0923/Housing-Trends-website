@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.southwind.mapper.SysUserMapper">
+    <resultMap id="info" type="com.southwind.entity.SysUser">
+    <!--手动指定字段与实体属性的映射关系
+        column: 数据表的字段名称
+        property：实体的属性名称
+    -->
+    <id column="id" property="id"></id>
+    <result column="user_name" property="userName"></result>
+    <result column="password" property="password"></result>
+    <result column="nick_name" property="nickName"></result>
+    </resultMap>
+    <select id="findAllUser" resultMap="info">
+        select id,user_name,password, nick_name from sys_user
+    </select>
+</mapper>

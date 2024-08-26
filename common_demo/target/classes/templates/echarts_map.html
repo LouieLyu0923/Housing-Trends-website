@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>ECharts</title>
+</head>
+<body>
+<!-- 引入刚刚下载的 ECharts 文件 -->
+<script src="https://cdn.jsdelivr.net/npm/echarts@5.4.2/dist/echarts.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.7.0/dist/jquery.min.js"></script>
+<!-- 为 ECharts 准备一个定义了宽高的 DOM -->
+<div id="main" style="width: 1500px;height:1000px;"></div>
+<script type="text/javascript">
+    // 基于准备好的dom，初始化echarts实例
+    var myChart = echarts.init(document.getElementById('main'));
+    myChart.showLoading();
+    $.get('https://geo.datav.aliyun.com/areas_v3/bound/440100_full.json', function (geoJson) {
+        console.log(geoJson);
+        myChart.hideLoading();
+        echarts.registerMap('gz', geoJson);
+
+        var option = {
+            title: {
+                text: '广州市各区平均每平方米房价',
+                subtext: 'Data from your database',
+            },
+            tooltip: {
+                trigger: 'item',
+                formatter: '{b}<br/>{c} (元 / 平方米)'
+            },
+            toolbox: {
+                show: true,
+                orient: 'vertical',
+                left: 'right',
+                top: 'center',
+                feature: {
+                    dataView: { readOnly: false },
+                    restore: {},
+                    saveAsImage: {}
+                }
+            },
+            visualMap: {
+                min: 10000,
+                max: 50000,
+                text: ['High', 'Low'],
+                realtime: false,
+                calculable: true,
+                inRange: {
+                    color: ['lightskyblue', 'yellow', 'orangered']
+                }
+            },
+            series: [
+                {
+                    name: '广州各区房价',
+                    type: 'map',
+                    map: 'gz',
+                    label: {
+                        show: true
+                    },
+                    data: []
+                }
+            ]
+        };
+
+        // Fetch the data from the backend API
+        fetch("/map")
+            .then(response => response.json())
+            .then(res => {
+                res.forEach(item => {
+                    option.series[0].data.push({ name: item.district, value: item.averagePricePerSqMeter });
+                });
+
+                // Set the chart option
+                myChart.setOption(option);
+
+                // Add click event listener
+                myChart.on('click', function (params) {
+                    window.open("/house/list");
+                });
+            })
+            .catch(error => console.error('Error fetching the data:', error));
+    });
+</script>
+</body>
+</html>

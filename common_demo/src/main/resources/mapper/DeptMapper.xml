@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.southwind.mapper.DeptMapper">
+
+    <!--一对多-->
+    <resultMap id="map01" type="com.southwind.entity.Dept">
+        <id property="id" column="did"></id>
+        <result property="name" column="dname"></result>
+        <collection property="list" ofType="com.southwind.entity.Emp">
+            <id property="id" column="id"></id>
+            <result property="name" column="name"></result>
+            <result property="age" column="age"></result>
+        </collection>
+    </resultMap>
+
+    <select id="getAll"  resultMap="map01">
+        select dept.did, dept.dname, emp.id, emp.name, emp.age
+        from dept,emp
+        where dept.did=emp.deptid
+    </select>
+</mapper>

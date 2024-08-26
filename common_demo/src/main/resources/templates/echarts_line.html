@@ -1,0 +1,190 @@
+ <!DOCTYPE html>
+ <html xmlns:th="http://www.thymeleaf.org">
+
+ <head>
+
+     <meta charset="utf-8">
+     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+     <script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.js"></script>
+     <script src="https://cdn.bootcss.com/echarts/4.6.0/echarts.min.js"></script>
+     <title>H+ 后台主题UI框架 - 基础表格</title>
+     <meta name="keywords" content="H+后台主题,后台bootstrap框架,会员中心主题,后台HTML,响应式后台">
+     <meta name="description" content="H+是一个完全响应式，基于Bootstrap3最新版本开发的扁平化主题，她采用了主流的左右两栏式布局，使用了Html5+CSS3等现代技术">
+
+     <link rel="shortcut icon" href="favicon.ico">
+     <link href="/css/bootstrap.min.css?v=3.3.7" rel="stylesheet">
+     <link href="/css/font-awesome.css?v=4.4.0" rel="stylesheet">
+     <link href="/css/plugins/iCheck/custom.css" rel="stylesheet">
+     <link href="/css/animate.css" rel="stylesheet">
+     <link href="/css/style.css?v=4.1.0" rel="stylesheet">
+     <!-- Sweet Alert -->
+     <link href="/css/plugins/sweetalert/sweetalert.css" rel="stylesheet">
+     <!-- Data Tables -->
+     <link href="/css/plugins/dataTables/dataTables.bootstrap.css" rel="stylesheet">
+     <!-- Updated Thymeleaf expression -->
+     <input type="hidden" th:value="${panyu}" id="panyu"/>
+     <input type="hidden" th:value="${tianhe}" id="tianhe"/>
+     <input type="hidden" th:value="${yuexiu}" id="yuexiu"/>
+     <input type="hidden" th:value="${haizhu}" id="haizhu"/>
+     <input type="hidden" th:value="${liwan}" id="liwan"/>
+     <input type="hidden" th:value="${baiyun}" id="baiyun"/>
+     <input type="hidden" th:value="${huangpu}" id="huangpu"/>
+     <input type="hidden" th:value="${huadu}" id="huadu"/>
+     <input type="hidden" th:value="${nansha}" id="nansha"/>
+     <input type="hidden" th:value="${conghua}" id="conghua"/>
+     <input type="hidden" th:value="${zengcheng}" id="zengcheng"/>
+ </head>
+
+ <body class="gray-bg">
+ <div class="wrapper wrapper-content">
+     <div id="main" class="chart" style="width: 100%; height: 700px;"></div>
+ </div>
+
+
+
+
+     <script>
+         $(document).ready(function () {
+             var chartDom = document.getElementById('main');
+             var myChart = echarts.init(chartDom);
+             var option;
+
+             option = {
+                 title: {
+                     text: '广州各区平均房价实时变化'
+                 },
+                 tooltip: {
+                     trigger: 'axis'
+                 },
+                 legend: {
+                     data: ['天河', '番禺', '越秀', '海珠', '荔湾','白云','黄埔','花都','南沙','从化','增城']
+                 },
+                 grid: {
+                     left: '3%',
+                     right: '4%',
+                     bottom: '3%',
+                     containLabel: true
+                 },
+                 toolbox: {
+                     feature: {
+                         saveAsImage: {},
+                         dataZoom: {}
+                     }
+                 },
+                 xAxis: {
+                     type: 'time',
+                     min: '2016-04-01',
+                     max: '2023-08-31',
+                     splitNumber: 30,
+                     axisLabel: {
+                         formatter: function (value, index) {
+                             var date = new Date(value);
+                             var year = date.getFullYear();
+                             var month = date.getMonth() + 1;
+                             var day = date.getDate();
+                             return month + '-' + day + '\n' + year;
+                         }
+                     }
+                 },
+
+                 yAxis: {
+                     type: 'value'
+                 },
+                 dataZoom: [{ // Add dataZoom component
+                     type: 'slider',
+                     start: 0,
+                     end: 100
+                 }],
+                 series: [
+                     {
+                         name: '天河',
+                         type: 'line',
+                         data: JSON.parse($('#tianhe').val())
+                     },
+                     {
+                         name: '番禺',
+                         type: 'line',
+                         data: JSON.parse($('#panyu').val())
+                     },
+                     {
+                         name: '越秀',
+                         type: 'line',
+                         data: JSON.parse($('#yuexiu').val())
+                     },
+                     {
+                         name: '海珠',
+                         type: 'line',
+                         data: JSON.parse($('#haizhu').val())
+                     },
+                     {
+                         name: '荔湾',
+                         type: 'line',
+                         data: JSON.parse($('#liwan').val())
+                     },
+                     {
+                         name: '白云',
+                         type: 'line',
+                         data: JSON.parse($('#baiyun').val())
+                     },
+                     {
+                         name: '黄埔',
+                         type: 'line',
+                         data: JSON.parse($('#huangpu').val())
+                     },
+                     {
+                         name: '花都',
+                         type: 'line',
+                         data: JSON.parse($('#huadu').val())
+                     },
+                     {
+                         name: '南沙',
+                         type: 'line',
+                         data: JSON.parse($('#nansha').val())
+                     },
+                     {
+                         name: '从化',
+                         type: 'line',
+                         data: JSON.parse($('#conghua').val())
+                     },
+                     {
+                         name: '增城',
+                         type: 'line',
+                         data: JSON.parse($('#zengcheng').val())
+                     },
+                 ]
+             };
+
+             myChart.setOption(option);
+         });
+     </script>
+
+
+
+
+ <!-- 全局js -->
+ <script src="/js/jquery.min.js?v=2.1.4"></script>
+ <script src="/js/bootstrap.min.js?v=3.3.7"></script>
+
+
+
+ <!-- Peity -->
+ <script src="/js/plugins/peity/jquery.peity.min.js"></script>
+
+ <!-- 自定义js -->
+ <script src="/js/content.js?v=1.0.0"></script>
+
+
+ <!-- iCheck -->
+ <script src="/js/plugins/iCheck/icheck.min.js"></script>
+
+ <!-- Peity -->
+ <script src="/js/demo/peity-demo.js"></script>
+
+ <!-- Sweet alert -->
+ <script src="/js/plugins/sweetalert/sweetalert.min.js"></script>
+
+
+ </body>
+
+ </html>

@@ -1,0 +1,832 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.js"></script>
+    <script src="https://cdn.bootcss.com/echarts/4.6.0/echarts.min.js"></script>
+    <title>H+ 后台主题UI框架 - 基础表格</title>
+    <meta name="keywords" content="H+后台主题,后台bootstrap框架,会员中心主题,后台HTML,响应式后台">
+    <meta name="description" content="H+是一个完全响应式，基于Bootstrap3最新版本开发的扁平化主题，她采用了主流的左右两栏式布局，使用了Html5+CSS3等现代技术">
+
+    <link rel="shortcut icon" href="favicon.ico">
+    <link href="/css/bootstrap.min.css?v=3.3.7" rel="stylesheet">
+    <link href="/css/font-awesome.css?v=4.4.0" rel="stylesheet">
+    <link href="/css/plugins/iCheck/custom.css" rel="stylesheet">
+    <link href="/css/animate.css" rel="stylesheet">
+    <link href="/css/style.css?v=4.1.0" rel="stylesheet">
+    <!-- Sweet Alert -->
+    <link href="/css/plugins/sweetalert/sweetalert.css" rel="stylesheet">
+    <!-- Data Tables -->
+    <link href="/css/plugins/dataTables/dataTables.bootstrap.css" rel="stylesheet">
+
+</head>
+
+<body class="gray-bg">
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>租房信息展示</h5>
+                    <div class="ibox-tools">
+                        <a class="collapse-link">
+                            <i class="fa fa-chevron-up"></i>
+                        </a>
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="table_basic.html#">
+                            <i class="fa fa-wrench"></i>
+                        </a>
+                        <ul class="dropdown-menu dropdown-user">
+                            <li><a href="table_basic.html#">选项1</a>
+                            </li>
+                            <li><a href="table_basic.html#">选项2</a>
+                            </li>
+                        </ul>
+                        <a class="close-link">
+                            <i class="fa fa-times"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="ibox-content">
+                    <div class="row">
+                        <form id="filterForm" action="/house/list" method="get" class="d-flex flex-column align-items-center">
+                            <input type="hidden" id="page" name="page" value=""><!--必须加一个input才能让page传到controller layer-->
+                            <div class="col-sm-6">
+                                <div class="input-group">
+                                    <span class="input-group-addon" style="font-weight: bold;">id =</span>
+                                    <input id="key1" type="text" name="key1" placeholder="请输入查询id" th:value="${key1}" class="form-control" style="width: 20%;">
+                                </div>
+                            </div>
+
+                            <div class="col-sm-6">
+                                <div class="input-group">
+                                    <input id="key2" type="text" name="key2" placeholder="请输入筛选条件2" th:value="${key2}" class="form-control">
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="input-group">
+                                    <input id="key3" type="text" name="key3" placeholder="请输入筛选条件3" th:value="${key3}" class="form-control">
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="input-group">
+                                    <input id="key4" type="text" name="key4" placeholder="请输入筛选条件4" th:value="${key4}" class="form-control">
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="input-group">
+                                    <input id="key5" type="text" name="key5" placeholder="请输入筛选条件5" th:value="${key5}" class="form-control">
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="input-group">
+                                    <input id="key6" type="text" name="key6" placeholder="请输入筛选条件6" th:value="${key6}" class="form-control">
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="input-group">
+                                    <input id="key7" type="text" name="key7" placeholder="请输入>或<房源面积，例如>200" th:value="${key7}" class="form-control" style="width: 130%;">
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="input-group">
+                                    <input id="key8" type="text" name="key8" placeholder="请输入>或<房源面积" th:value="${key8}" class="form-control" style="width: 100%;">
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="input-group">
+                                    <input id="key9" type="text" name="key9" placeholder="请输入>或<每平方房价，例如<500000" th:value="${key9}" class="form-control" style="width: 130%;">
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="input-group">
+                                    <input id="key10" type="text" name="key10" placeholder="请输入>或<每平方房价" th:value="${key10}" class="form-control" style="width: 100%;">
+                                </div>
+                            </div>
+                            <div class="col-sm-12 mt-2">
+                                <div class="input-group">
+                                    <button id="search-button" type="submit" class="btn btn-primary">搜索</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+
+
+                <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                            <tr>
+                                <th>编号</th>
+                                <th>小区</th>
+                                <th>面积</th>
+                                <th>每平方房价</th>
+                                <th>朝向</th>
+                                <th>楼层</th>
+                                <th>房型</th>
+                                <th>所在区</th>
+                                <th>所在街道</th>
+                                <th>优点</th>
+                                <th>成交时间</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:if="${list.isEmpty()}">
+                                <td colspan="11">No houses found.</td>
+                            </tr>
+                            <tr th:each="house:${list}">
+                                <td>id=[[${house.id}]]</td>
+                                <td>[[${house.houseName}]]</td>
+                                <td>[[${house.houseArea}]]</td>
+                                <td>[[${house.price}]]</td>
+                                <td>[[${house.houseAspect}]]</td>
+                                <td>[[${house.floor}]]</td>
+                                <td>[[${house.type}]]</td>
+                                <td>[[${house.urbanArea}]]</td>
+                                <td>[[${house.street}]]</td>
+                                <td>[[${house.advantage}]]</td>
+                                <td>[[${house.date}]]</td>
+                            </tr>
+                            </tbody>
+                        </table>
+
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="dataTables_info" id="DataTables_Table_0_info" role="alert"
+                                 aria-live="polite" aria-relevant="all">显示 [[${start}]] 到 [[${end}]] 项，共 [[${total}]] 项
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="dataTables_paginate paging_simple_numbers" id="DataTables_Table_0_paginate">
+                                <ul class="pagination">
+                                    <li class="paginate_button previous"
+                                        aria-controls="DataTables_Table_0"
+                                        tabindex="0" id="DataTables_Table_0_previous">
+                                        <a href="javascript:void(0)" onclick="prevPage()">上一页</a>
+                                    </li>
+
+
+                                    <li th:class="'paginate_button '+${#strings.equals(page,pageItem)?'active':''}" aria-controls="DataTables_Table_0"
+                                        tabindex="0"
+                                        th:each="pageItem:${pages}">
+                                        <a href="javascript:void(0)" th:onclick="page([[${pageItem}]])">[[${pageItem}]]</a>
+                                    </li>
+
+
+                                    <li class="paginate_button next"
+                                        aria-controls="DataTables_Table_0"
+                                        tabindex="0"
+                                        id="DataTables_Table_0_next">
+                                        <a href="javascript:void(0)" onclick="nextPage()">下一页</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<div class="container">
+    <div class="item">
+        <span class="milky">所有日期的每平方最高价：[[${maxPricePerArea}]]</span>
+    </div>
+    <div class="item">
+        <span class="milky">所有日期的最低价：[[${minPricePerArea}]]</span>
+    </div>
+    <div class="item">
+        <span class="milky">所有日期的每平方中位数：[[${midPricePerArea}]]</span>
+    </div>
+    <div class="item">
+        <span class="milky">成交量：[[${count}]]</span>
+    </div>
+</div>
+
+
+<!--<div class="charts-container">-->
+<!--    <div id="main1" class="chart" style="width: 600px; height: 400px;"></div>-->
+<!--    <div id="main2" class="chart" style="width: 600px; height: 400px;"></div>-->
+<!--</div>-->
+<div id="main1" class="chart" style="width: 1500px; height: 400px;"></div>
+<br>
+<br>
+<br>
+<div id="main4" class="chart" style="width: 1500px; height: 400px;"></div>
+<br>
+<br>
+<br>
+<div id="main5" class="chart" style="width: 1500px; height: 400px;"></div>
+<br>
+<br>
+<br>
+<div id="main6" class="chart" style="width: 1500px; height: 400px;"></div>
+<br>
+<br>
+<br>
+<div id="main3" class="chart" style="width: 1500px; height: 400px;"></div>
+
+<style>
+    .charts-container {
+        display: flex;
+    }
+
+    .chart {
+        flex: 1;
+        margin-right: 20px;
+    }
+    .container {
+        display: flex;
+    }
+
+    .item {
+        flex: 1;
+        text-align: center;
+        margin: 0 10px; /* Adjust the margin value to add space */
+    }
+    .milky{
+        font-size: 30px;   /*设置文字大小*/
+        color:#3366FF;  /*设置文字颜色*/
+        text-shadow: 0 8px 10px #6699FF;  /*设置文字阴影*/
+        font-weight: bolder;  /*设置文字宽度*/
+        text-align: center;  /*设置文字居中*/
+
+    }
+</style>
+
+
+
+
+
+
+<!--<input type="hidden" th:value="${priceList}" id="priceList"/>-->
+<!--<input type="hidden" th:value="${idList}" id="idList"/>-->
+
+<!--<script type="text/javascript">-->
+
+
+
+<!--Time and Price-->
+<!--Time and Price-->
+<!--Time, Price, and ID-->
+<input type="hidden" th:value="${pricePerDay}" id="pricePerDay"/>
+
+<script>
+
+    var chartDom = document.getElementById('main1');
+    var myChart = echarts.init(chartDom);
+    var option;
+    // prettier-ignore
+    const data = JSON.parse(pricePerDay.value);
+
+    // Sort the data based on date
+    data.sort(function(a, b) {
+        return new Date(a[0]) - new Date(b[0]);
+    });
+
+    const dateList = data.map(function (item) {
+        return item[0];
+    });
+    const valueList = data.map(function (item) {
+        return Math.round(item[1]);
+    });
+    const idList = data.map(function (item) {
+        return item[2]
+    });
+    // Calculate average value
+    const averageValue = valueList.reduce((acc, val) => acc + val, 0) / valueList.length;
+
+    option = {
+        title: {
+            text: '已筛选的每日平均（每平方米价格-时间）趋势图'
+        },
+        tooltip: {
+            trigger: 'axis',
+            formatter: function(params) {
+                var value = Math.round(params[0].value);
+                var dataIndex = params[0].dataIndex;
+
+                return  '每平方米价格: ' + value + '<br/>';
+            }
+        },
+        xAxis: {
+            data: dateList
+        },
+        yAxis: {},
+        dataZoom: [
+            {
+                type: 'slider',
+                xAxisIndex: 0,
+                filterMode: 'empty'
+            }
+        ],
+        series: [
+            {
+                type: 'line',
+                showSymbol: false,
+                data: valueList,
+                markPoint: {
+                    symbol: 'pin',
+                    data: [
+                        {type: 'min', name: 'Min'},
+                        {type: 'max', name: 'Max'}
+                    ]
+                }
+            },
+            {
+                type: 'line',
+                showSymbol: false,
+                data: Array(dateList.length).fill(averageValue),
+                lineStyle: {
+                    color: 'rgba(0, 0, 0, 0.3)'
+                },
+                markLine: {
+                    symbol: 'none',
+                    data: [
+                        {
+                            yAxis: averageValue,
+                            label: {
+                                formatter: 'Average',
+                                position: 'end'
+                            }
+                        }
+                    ]
+                }
+            }
+        ]
+    };
+
+    option && myChart.setOption(option);
+</script>
+
+
+
+
+
+
+
+<input type="hidden" th:value="${priceMaxPerDay}" id="priceMaxPerDay"/>
+
+<script>
+
+    var chartDom2 = document.getElementById('main4');
+    var myChart2 = echarts.init(chartDom2);
+    var option2;
+    // prettier-ignore
+    const data2 = JSON.parse(priceMaxPerDay.value);
+    // Sort the data based on date
+    data2.sort(function(a, b) {
+        return new Date(a[0]) - new Date(b[0]);
+    });
+
+    const dateList2 = data2.map(function (item) {
+        return item[0];
+    });
+    const valueList2 = data2.map(function (item) {
+        return Math.round(item[1]);
+    });
+    // Calculate average value
+    const averageValue2 = valueList2.reduce((acc, val) => acc + val, 0) / valueList2.length;
+
+    option2 = {
+        title: {
+            text: '已筛选的每日最高价（每平方米价格-时间）趋势图'
+        },
+        tooltip: {
+            trigger: 'axis',
+            formatter: function(params) {
+                var value = Math.round(params[0].value);
+                return  '每平方米价格: ' + value + '<br/>';
+            }
+        },
+        xAxis: {
+            data: dateList2
+        },
+        yAxis: {},
+        dataZoom: [
+            {
+                type: 'slider',
+                xAxisIndex: 0,
+                filterMode: 'empty'
+            }
+        ],
+        series: [
+            {
+                type: 'line',
+                showSymbol: false,
+                data: valueList2,
+                markPoint: {
+                    symbol: 'pin',
+                    data: [
+                        {type: 'min', name: 'Min'},
+                        {type: 'max', name: 'Max'}
+                    ]
+                }
+            },
+            {
+                type: 'line',
+                showSymbol: false,
+                data: Array(dateList2.length).fill(averageValue2),
+                lineStyle: {
+                    color: 'rgba(0, 0, 0, 0.3)'
+                },
+                markLine: {
+                    symbol: 'none',
+                    data: [
+                        {
+                            yAxis: averageValue2,
+                            label: {
+                                formatter: 'Average',
+                                position: 'end'
+                            }
+                        }
+                    ]
+                }
+            }
+        ]
+    };
+
+    option2 && myChart2.setOption(option2);
+</script>
+
+
+
+<input type="hidden" th:value="${priceMinPerDay}" id="priceMinPerDay"/>
+
+<script>
+
+    var chartDom3 = document.getElementById('main5');
+    var myChart3 = echarts.init(chartDom3);
+    var option3;
+    // prettier-ignore
+    const data3 = JSON.parse(priceMinPerDay.value);
+    // Sort the data based on date
+    data3.sort(function(a, b) {
+        return new Date(a[0]) - new Date(b[0]);
+    });
+
+    const dateList3 = data3.map(function (item) {
+        return item[0];
+    });
+    const valueList3 = data3.map(function (item) {
+        return Math.round(item[1]);
+    });
+    // Calculate average value
+    const averageValue3 = valueList3.reduce((acc, val) => acc + val, 0) / valueList3.length;
+
+    option3 = {
+        title: {
+            text: '已筛选的每日最低价（每平方米价格-时间）趋势图'
+        },
+        tooltip: {
+            trigger: 'axis',
+            formatter: function(params) {
+                var value = Math.round(params[0].value);
+                return  '每平方米价格: ' + value + '<br/>';
+            }
+        },
+        xAxis: {
+            data: dateList3
+        },
+        yAxis: {},
+        dataZoom: [
+            {
+                type: 'slider',
+                xAxisIndex: 0,
+                filterMode: 'empty'
+            }
+        ],
+        series: [
+            {
+                type: 'line',
+                showSymbol: false,
+                data: valueList3,
+                markPoint: {
+                    symbol: 'pin',
+                    data: [
+                        {type: 'min', name: 'Min'},
+                        {type: 'max', name: 'Max'}
+                    ]
+                }
+            },
+            {
+                type: 'line',
+                showSymbol: false,
+                data: Array(dateList3.length).fill(averageValue3),
+                lineStyle: {
+                    color: 'rgba(0, 0, 0, 0.3)'
+                },
+                markLine: {
+                    symbol: 'none',
+                    data: [
+                        {
+                            yAxis: averageValue3,
+                            label: {
+                                formatter: 'Average',
+                                position: 'end'
+                            }
+                        }
+                    ]
+                }
+            }
+        ]
+    };
+
+    option3 && myChart3.setOption(option3);
+</script>
+
+
+<input type="hidden" th:value="${priceMidPerDay}" id="priceMidPerDay"/>
+
+<script>
+
+    var chartDom4 = document.getElementById('main6');
+    var myChart4 = echarts.init(chartDom4);
+    var option4;
+    // prettier-ignore
+    const data4 = JSON.parse(priceMidPerDay.value);
+    // Sort the data based on date
+    data4.sort(function(a, b) {
+        return new Date(a[0]) - new Date(b[0]);
+    });
+
+    const dateList4 = data4.map(function (item) {
+        return item[0];
+    });
+    const valueList4 = data4.map(function (item) {
+        return Math.round(item[1]);
+    });
+    // Calculate average value
+    const averageValue4 = valueList4.reduce((acc, val) => acc + val, 0) / valueList4.length;
+
+    option4 = {
+        title: {
+            text: '已筛选的每日中位数价（每平方米价格-时间）趋势图'
+        },
+        tooltip: {
+            trigger: 'axis',
+            formatter: function(params) {
+                var value = Math.round(params[0].value);
+                return  '每平方米价格: ' + value + '<br/>';
+            }
+        },
+        xAxis: {
+            data: dateList4
+        },
+        yAxis: {},
+        dataZoom: [
+            {
+                type: 'slider',
+                xAxisIndex: 0,
+                filterMode: 'empty'
+            }
+        ],
+        series: [
+            {
+                type: 'line',
+                showSymbol: false,
+                data: valueList4,
+                markPoint: {
+                    symbol: 'pin',
+                    data: [
+                        {type: 'min', name: 'Min'},
+                        {type: 'max', name: 'Max'}
+                    ]
+                }
+            },
+            {
+                type: 'line',
+                showSymbol: false,
+                data: Array(dateList4.length).fill(averageValue4),
+                lineStyle: {
+                    color: 'rgba(0, 0, 0, 0.3)'
+                },
+                markLine: {
+                    symbol: 'none',
+                    data: [
+                        {
+                            yAxis: averageValue4,
+                            label: {
+                                formatter: 'Average',
+                                position: 'end'
+                            }
+                        }
+                    ]
+                }
+            }
+        ]
+    };
+
+    option4 && myChart4.setOption(option4);
+</script>
+
+
+
+
+<input type="hidden" th:value="${yoyListJson}" id="yoyListJson"/>
+<input type="hidden" th:value="${momListJson}" id="momListJson"/>
+<input type="hidden" th:value="${priceIndexListJson}" id="priceIndexListJson"/>
+<script>
+    // Retrieve the data from the server
+    var momList = JSON.parse(momListJson.value);
+    var yoyList = JSON.parse(yoyListJson.value);
+    var priceIndexList = JSON.parse(priceIndexListJson.value);
+
+
+    const dateList_ = yoyList.map(function (item) {
+        return item[0];
+    });
+    const valueIndexList = priceIndexList.map(function (item) {
+        return Math.round(item[1]);
+    });
+    const valueYoyList = yoyList.map(function (item) {
+        return Math.round(item[1]);
+    });
+    const valueMomList = momList.map(function (item) {
+        return Math.round(item[1]);
+    });
+
+    // Create the ECharts chart instance
+    var chartContainer = document.getElementById('main3');
+    var chart = echarts.init(chartContainer);
+
+    // Configure the chart options
+    var options = {
+        title: {
+            text: '价格指数(平均值为1000指数)和\n环比(相对于上个月的比值)\n同比(相对于上一年的比值)'
+        },
+        legend: {
+            data: ['同比', '环比', '价格指数']
+        },
+        tooltip: {
+            trigger: 'axis'
+        },
+        xAxis: {
+            type: 'category',
+            data: dateList_,
+            boundaryGap: false // Add this line to include all data points on the x-axis
+        },
+        yAxis: {
+            type: 'value'
+        },
+        dataZoom: [
+            {
+                type: 'slider',
+                xAxisIndex: 0,
+                filterMode: 'empty'
+            }
+        ],
+        series: [
+
+            {
+                name: '同比',
+                type: 'bar',
+                data: valueYoyList
+            },
+            {
+                name: '环比',
+                type: 'bar',
+                data: valueMomList
+            },
+            {
+                name: '价格指数',
+                type: 'line',
+                data: valueIndexList
+            }
+        ]
+    };
+
+    // Set the chart options and render the chart
+    chart.setOption(options);
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+<!--&lt;!&ndash;Houses of all pages&ndash;&gt;-->
+<!--<input type="hidden" th:value="${allPriceList}" id="allPriceList"/>-->
+<!--<input type="hidden" th:value="${allIdList}" id="allIdList"/>-->
+<!--<input type="hidden" th:value="${allHouseList}" id="allHouseList"/>-->
+
+<!--<script type="text/javascript">-->
+
+
+<!--    // 基于准备好的dom，初始化echarts实例-->
+<!--    var myChart = echarts.init(document.getElementById('main2'));-->
+
+<!--    var allPricel = JSON.parse(allPriceList.value);-->
+
+<!--    var allHousel = JSON.parse(allHouseList.value);-->
+
+<!--    // 指定图表的配置项和数据-->
+<!--    var option = {-->
+<!--        title: {-->
+<!--            text: '筛选后各房源的总房价'-->
+<!--        },-->
+<!--        tooltip: {},-->
+<!--        legend: {-->
+<!--            data: ['销量']-->
+<!--        },-->
+<!--        xAxis: {-->
+<!--            type: 'category',-->
+<!--            data: allHousel,-->
+
+<!--        },-->
+<!--        yAxis: {},-->
+<!--        series: [{-->
+<!--            name: '销量',-->
+<!--            type: 'bar',-->
+<!--            data: allPricel-->
+<!--        }]-->
+<!--    };-->
+
+<!--    // 使用刚指定的配置项和数据显示图表。-->
+<!--    myChart.setOption(option);-->
+<!--</script>-->
+
+
+
+
+
+
+
+
+
+
+
+<!-- 全局js -->
+<script src="/js/jquery.min.js?v=2.1.4"></script>
+<script src="/js/bootstrap.min.js?v=3.3.7"></script>
+
+
+
+<!-- Peity -->
+<script src="/js/plugins/peity/jquery.peity.min.js"></script>
+
+<!-- 自定义js -->
+<script src="/js/content.js?v=1.0.0"></script>
+
+
+<!-- iCheck -->
+<script src="/js/plugins/iCheck/icheck.min.js"></script>
+
+<!-- Peity -->
+<script src="/js/demo/peity-demo.js"></script>
+
+<!-- Sweet alert -->
+<script src="/js/plugins/sweetalert/sweetalert.min.js"></script>
+
+
+<script>
+    $(document).ready(function () {
+        $('.i-checks').iCheck({
+            checkboxClass: 'icheckbox_square-green',
+            radioClass: 'iradio_square-green',
+        });
+    });
+
+    function prevPage() {
+        console.log("prevPage="+[[${page}]])
+        if([[${page}]] == 1) return
+        var form = $('#filterForm');
+        form.find('#page').val([[${page}]]-1);
+        form.submit();
+    }
+
+    function page(page) {
+        var form = $('#filterForm');
+        form.find('#page').val(page);
+        console.log("page="+page)
+        form.submit();
+    }
+
+    function nextPage() {
+        if([[${page}]] == [[${pageCount}]]) return
+        var form = $('#filterForm');
+        form.find('#page').val([[${page}]]+1);
+        form.submit();
+    }
+</script>
+
+
+
+</body>
+
+</html>

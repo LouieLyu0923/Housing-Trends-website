@@ -1,0 +1,295 @@
+ <!DOCTYPE html>
+ <html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.js"></script>
+    <script src="https://cdn.bootcss.com/echarts/4.6.0/echarts.min.js"></script>
+    <title>H+ 后台主题UI框架 - 基础表格</title>
+    <meta name="keywords" content="H+后台主题,后台bootstrap框架,会员中心主题,后台HTML,响应式后台">
+    <meta name="description" content="H+是一个完全响应式，基于Bootstrap3最新版本开发的扁平化主题，她采用了主流的左右两栏式布局，使用了Html5+CSS3等现代技术">
+
+    <link rel="shortcut icon" href="favicon.ico">
+    <link href="/css/bootstrap.min.css?v=3.3.7" rel="stylesheet">
+    <link href="/css/font-awesome.css?v=4.4.0" rel="stylesheet">
+    <link href="/css/plugins/iCheck/custom.css" rel="stylesheet">
+    <link href="/css/animate.css" rel="stylesheet">
+    <link href="/css/style.css?v=4.1.0" rel="stylesheet">
+    <!-- Sweet Alert -->
+    <link href="/css/plugins/sweetalert/sweetalert.css" rel="stylesheet">
+    <!-- Data Tables -->
+    <link href="/css/plugins/dataTables/dataTables.bootstrap.css" rel="stylesheet">
+</head>
+
+<body class="gray-bg">
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <h5>用户管理</h5>
+                        <div class="ibox-tools">
+                            <a class="collapse-link">
+                                <i class="fa fa-chevron-up"></i>
+                            </a>
+                            <a class="dropdown-toggle" data-toggle="dropdown" href="table_basic.html#">
+                                <i class="fa fa-wrench"></i>
+                            </a>
+                            <ul class="dropdown-menu dropdown-user">
+                                <li><a href="table_basic.html#">选项1</a>
+                                </li>
+                                <li><a href="table_basic.html#">选项2</a>
+                                </li>
+                            </ul>
+                            <a class="close-link">
+                                <i class="fa fa-times"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="ibox-content">
+                        <div class="row">
+                            <div class="col-sm-9 m-b-xs">
+                                <a data-toggle="modal" class="btn btn-success" href="/user_list.html#modal-form">
+                                    <i class="fa fa-plus"></i> 新增
+                                </a>
+                            </div>
+                            <div class="col-sm-3">
+                                <form action="/user/list" method="get">
+                                    <div class="input-group">
+                                        <input id="key" type="text" name="key" placeholder="请输入关键词" th:value="${key}" class="input-sm form-control"> <span class="input-group-btn">
+                                            <button type="submit" class="btn btn-sm btn-primary"> 搜索</button> </span>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>编号</th>
+                                        <th>用户名</th>
+                                        <th>昵称</th>
+                                        <th>电话</th>
+                                        <th>类型</th>
+                                        <th>状态</th>
+                                        <th>操作</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr th:each="user:${list}">
+                                        <td>[[${user.id}]]</td>
+                                        <td>[[${user.userName}]]</td>
+                                        <td>[[${user.nickName}]]</td>
+                                        <td>[[${user.mobile}]]</td>
+                                        <td>[[${user.accountType}]]</td>
+                                        <td>[[${user.accountState}]]</td>
+                                        <td>
+                                            <a th:href="'/user/findById/'+${user.id}"
+                                               class="btn btn-primary btn-sm">
+                                                <i class="fa fa-edit"></i> 修改
+                                            </a>
+                                            <a th:if="!${#strings.equals(user.userName,'admin')}"
+                                               class="btn btn-danger btn-sm"
+                                               th:onclick="'deleteUser('+${user.id}+')'">
+                                                <i class="fa fa-remove"></i> 删除
+                                            </a>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="dataTables_info" id="DataTables_Table_0_info" role="alert"
+                                     aria-live="polite" aria-relevant="all">显示 [[${start}]] 到 [[${end}]] 项，共 [[${total}]] 项
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="dataTables_paginate paging_simple_numbers" id="DataTables_Table_0_paginate">
+                                    <ul class="pagination">
+                                        <li class="paginate_button previous"
+                                            aria-controls="DataTables_Table_0"
+                                            tabindex="0" id="DataTables_Table_0_previous">
+                                            <a href="javascript:void(0)" onclick="prevPage()">上一页</a>
+                                        </li>
+
+                                        <li th:class="'paginate_button '+${#strings.equals(page,pageItem)?'active':''}" aria-controls="DataTables_Table_0"
+                                            tabindex="0"
+                                            th:each="pageItem:${pages}"
+                                        >
+                                            <a href="javascript:void(0)" th:onclick="page([[${pageItem}]])">[[${pageItem}]]</a>
+                                        </li>
+
+                                        <li class="paginate_button next"
+                                            aria-controls="DataTables_Table_0"
+                                            tabindex="0"
+                                            id="DataTables_Table_0_next">
+                                            <a href="javascript:void(0)" onclick="nextPage()">下一页</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="modal-form" class="modal fade" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-sm-12 b-r">
+                            <h3 class="m-t-none m-b">添加用户信息</h3>
+                            <form class="form-horizontal" action="/user/save" method="post">
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">用户名：</label>
+
+                                    <div class="col-sm-8">
+                                        <input type="text" required name="userName" placeholder="用户名" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">密码：</label>
+
+                                    <div class="col-sm-8">
+                                        <input type="password" required name="password" placeholder="密码" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">昵称：</label>
+
+                                    <div class="col-sm-8">
+                                        <input type="text" required name="nickName" placeholder="昵称" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">手机号：</label>
+
+                                    <div class="col-sm-8">
+                                        <input type="text" required name="mobile" placeholder="手机号" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">账号类型：</label>
+
+                                    <div class="col-sm-8">
+                                        <select type="text" name="accountType" placeholder="账号类型" class="form-control">
+                                            <option value="1">管理员账号</option>
+                                            <option value="2">普通用户账号</option>
+                                            <option value="3">访客账号</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">账号状态：</label>
+
+                                    <div class="col-sm-8">
+                                        <select type="text" name="accountState" placeholder="账号状态" class="form-control">
+                                            <option value="1">启用</option>
+                                            <option value="0">冻结</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">账号角色：</label>
+
+                                    <div class="col-sm-8">
+                                        <select type="text" name="userRole" placeholder="账号角色" class="form-control">
+                                            <option value="ROLE_ADMIN">管理员</option>
+                                            <option value="ROLE_USER">普通用户</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-sm-offset-3 col-sm-8">
+                                        <button class="btn btn-sm btn-primary pull-right m-t-n-xs" type="submit"><strong>添 加</strong>
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- 全局js -->
+    <script src="/js/jquery.min.js?v=2.1.4"></script>
+    <script src="/js/bootstrap.min.js?v=3.3.7"></script>
+
+
+
+    <!-- Peity -->
+    <script src="/js/plugins/peity/jquery.peity.min.js"></script>
+
+    <!-- 自定义js -->
+    <script src="/js/content.js?v=1.0.0"></script>
+
+
+    <!-- iCheck -->
+    <script src="/js/plugins/iCheck/icheck.min.js"></script>
+
+    <!-- Peity -->
+    <script src="/js/demo/peity-demo.js"></script>
+
+    <!-- Sweet alert -->
+    <script src="/js/plugins/sweetalert/sweetalert.min.js"></script>
+
+
+    <script>
+        $(document).ready(function () {
+            $('.i-checks').iCheck({
+                checkboxClass: 'icheckbox_square-green',
+                radioClass: 'iradio_square-green',
+            });
+        });
+
+        function prevPage() {
+            if([[${page}]] == 1) return
+            var key = $("#key").val()
+            location.href = '/user/list?key='+key+'&page='+([[${page}]]-1)
+        }
+
+        function page(page) {
+            var key = $("#key").val()
+            location.href = '/user/list?key='+key+'&page='+page
+        }
+
+        function nextPage() {
+            if([[${page}]] == [[${pageCount}]]) return
+            var key = $("#key").val()
+            location.href = '/user/list?key='+key+'&page='+([[${page}]]+1)
+        }
+
+        function deleteUser(userId) {
+            swal({
+                title: "您确定要删除这条信息吗",
+                text: "删除后将无法恢复，请谨慎操作！",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: "删除",
+                closeOnConfirm: false
+            }, function () {
+                //请求后台
+                $.get('/user/delete/'+userId,function (data) {
+                    if(data == 'success') location.href = '/user/list'
+                })
+            });
+        }
+    </script>
+
+    <script type="text/javascript" src="http://tajs.qq.com/stats?sId=9051096" charset="UTF-8"></script>
+    <!--统计代码，可删除-->
+
+</body>
+
+</html>
